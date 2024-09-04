@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from django.http import JsonResponse
 import re
+from django.shortcuts import render
 
 def fetch_news_entries():
     url = 'https://news.ycombinator.com/'
@@ -58,10 +59,8 @@ def filter_entries(entries):
 def news_entries_view(request):
     entries = fetch_news_entries()
     long_titles_sorted, short_titles_sorted = filter_entries(entries)
-    
-    response_data = {
-        'long_titles_sorted': long_titles_sorted,
-        'short_titles_sorted': short_titles_sorted
-    }
 
-    return JsonResponse(response_data)
+    return render(request, 'api/news_entries.html', {
+        'long_titles': long_titles_sorted,
+        'short_titles': short_titles_sorted
+    })
